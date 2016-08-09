@@ -26,6 +26,10 @@
                 font-weight: bolder;
                 color: #BBDD60;
             }
+            div.choose
+            {
+                display: none;
+            }
         </style>
         <div id="main"></div>
 
@@ -41,54 +45,67 @@
                 }
                 return s;
             }
-            function appendSpan(content,clazz)
+            function appendSpan(parent,content,clazz)
             {
-                if(clazz)
-                    //$("#main").append('<span class="'+clazz+'">'+content+"</span>");
-                    main().append('<span class="'+clazz+'">'+content+"</span>");
+                if(!clazz)
+                    parent.append("<span>"+content+"</span>");
+                else if(clazz!="tittle")
+                    parent.append('<span class="'+clazz+'">'+content+"</span>");
                 else
-                    //$("#main").append("<span>"+content+"</span>");
-                    main().append("<span>"+content+"</span>");
+                    parent.append('<span class="tittle" id="'+"tittle."+content+'">'+content+"</span>");
+                return parent.children("span:last");
             }
-            function appendText(texts,tab)
+            function appendText(parent,texts,tab)
             {
                 for(var i=0;i<texts.length;++i)
                 {
-                    appendSpan(tab+texts[i],false);
+                    appendSpan(parent,tab+texts[i],"text");
                 }
             }
-            function appendChoose(chooses,tabnum)
+            function appendDiv(parent,id)
+            {
+                parent.append('<div id="'+id+'" class="choose"></div>');
+                return parent.children('div:last');
+            }
+            function appendChoose(parent,chooses,tabnum)
             {
                 var tab=getTab(tabnum);
                 for(var choose in chooses)
                 {
-                    appendSpan(tab+choose,"tittle");
-                    appendNode(chooses[choose],tabnum+1);
+                    var span=appendSpan(parent,tab+choose,"tittle");
+                    var container=appendDiv(parent,choose);
+                    span.click(getCallBack(container));
+                    appendNode(container,chooses[choose],tabnum+1);
+
                 }
             }
-            function appendEnd(end,tab)
+            function getCallBack(container)
             {
-                {
-                    appendSpan(tab+end.title,"end")
-                }
+                return function(){container.fadeToggle('100');};
             }
-            function appendNode(data,tabnum)
+            function appendEnd(parent,end,tab)
+            {
+                appendSpan(parent,tab+end.title,"end")
+            }
+            function appendNode(parent,data,tabnum)
             {
                 var tab=getTab(tabnum);
 
                 if(data.end==undefined)
                 {
-                    appendText(data.text,tab);
-                    appendChoose(data.choose[0],tabnum);
+                    appendText(parent,data.text,tab);
+                    appendChoose(parent,data.choose[0],tabnum);
                 }
                 else
                 {
-                    appendText(data.text,tab);
-                    appendEnd(data.end,tab);
+                    appendText(parent,data.text,tab);
+                    appendEnd(parent,data.end,tab);
                 }
             }
-
-            appendNode(DATA,0);
+            appendNode(main(),DATA,0);
+            /*$('div.choose').children('span.tittle')
+            .click(function f()
+                        {$(this).parent().children("span.text").fadeToggle('400');});*/
         </script>
     </body>
 </html>
