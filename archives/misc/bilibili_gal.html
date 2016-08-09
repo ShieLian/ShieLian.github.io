@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>剧情攻略</title>
+        <script type="text/javascript" src="http://activity.hdslb.com/zzjs/20160801qixi/js/data.js"></script>
+        <script src="http://static.hdslb.com/js/jquery.min.js" charset="utf-8"></script>
+    </head>
+    <body>
+        <style media="screen">
+            p
+            {
+                ;
+            }
+            span
+            {
+                display:block;
+            }
+            span.tittle
+            {
+                font-weight: bold;
+                color: #66CCFF;
+            }
+            span.end
+            {
+                font-weight: bolder;
+                color: #BBDD60;
+            }
+        </style>
+        <div id="main"></div>
+
+        <script type="text/javascript">
+            var main=function(){return $('#main');}
+            //var tabnum=0;
+            function getTab(num)
+            {
+                var s="";
+                for(var i=0;i<num;++i)
+                {
+                    s+="&nbsp;&nbsp;";
+                }
+                return s;
+            }
+            function appendSpan(content,clazz)
+            {
+                if(clazz)
+                    //$("#main").append('<span class="'+clazz+'">'+content+"</span>");
+                    main().append('<span class="'+clazz+'">'+content+"</span>");
+                else
+                    //$("#main").append("<span>"+content+"</span>");
+                    main().append("<span>"+content+"</span>");
+            }
+            function appendText(texts,tab)
+            {
+                for(var i=0;i<texts.length;++i)
+                {
+                    appendSpan(tab+texts[i],false);
+                }
+            }
+            function appendChoose(chooses,tabnum)
+            {
+                var tab=getTab(tabnum);
+                for(var choose in chooses)
+                {
+                    appendSpan(tab+choose,"tittle");
+                    appendNode(chooses[choose],tabnum+1);
+                }
+            }
+            function appendEnd(end,tab)
+            {
+                {
+                    appendSpan(tab+end.title,"end")
+                }
+            }
+            function appendNode(data,tabnum)
+            {
+                var tab=getTab(tabnum);
+
+                if(data.end==undefined)
+                {
+                    appendText(data.text,tab);
+                    appendChoose(data.choose[0],tabnum);
+                }
+                else
+                {
+                    appendText(data.text,tab);
+                    appendEnd(data.end,tab);
+                }
+            }
+
+            appendNode(DATA,0);
+        </script>
+    </body>
+</html>
